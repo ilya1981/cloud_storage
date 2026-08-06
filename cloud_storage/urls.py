@@ -23,12 +23,14 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path(
-        "api/", include("accounts.urls")
-    ),  # accounts.urls: например, path("login/", ...) -> /api/login/
-    path(
-        "api/", include("files.urls")
-    ),  # files.urls: router.register("files", ...) -> /api/files/
+
+    # Все auth-эндпоинты будут по пути /api/auth/*
+    path("api/auth/", include("accounts.urls")),
+
+    # Файлы — по пути /api/files/* (через DefaultRouter)
+    path("api/", include("files.urls")),
+
+    # React-приложение
     path("", serve_react_app),
     # path("<path:path>", serve_react_app),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
