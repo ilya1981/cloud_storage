@@ -20,6 +20,7 @@ from django.urls import path, include
 from .views import serve_react_app
 from django.conf import settings
 from django.conf.urls.static import static
+from files.views import PublicFileDownloadView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,10 +30,19 @@ urlpatterns = [
 
     # Файлы — по пути /api/files/* (через DefaultRouter)
     path("api/", include("files.urls")),
-     # Admin API 
-    path('api/admin/', include('accounts.admin_urls')),
 
+
+     # Admin API
+    path('api/admin/', include('accounts.admin_urls')),
+     # Публичные ссылки
+    path(
+        "public/<uuid:token>/download/",
+        PublicFileDownloadView.as_view(),
+        name="public-download",
+    ),
     # React-приложение
     path("", serve_react_app),
     # path("<path:path>", serve_react_app),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
