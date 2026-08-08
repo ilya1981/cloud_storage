@@ -3,7 +3,7 @@ import api from '@/services/api';
 
 export const register = createAsyncThunk('auth/register', async (credentials, { rejectWithValue }) => {
   try {
-    const response = await api.post('register/', credentials);
+    const response = await api.post('auth/register/', credentials);
     return response.data?.user || response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data || 'Ошибка регистрации');
@@ -12,7 +12,7 @@ export const register = createAsyncThunk('auth/register', async (credentials, { 
 
 export const login = createAsyncThunk('auth/login', async (credentials, { rejectWithValue }) => {
   try {
-    const response = await api.post('login/', credentials);
+    const response = await api.post('auth/login/', credentials);
     return response.data?.user || response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data || 'Ошибка входа');
@@ -22,7 +22,7 @@ export const login = createAsyncThunk('auth/login', async (credentials, { reject
 export const restoreSession = createAsyncThunk('auth/restoreSession', async (_, { rejectWithValue }) => {
   console.log('🔄 Запуск restoreSession...');
   try {
-    const response = await api.get('me/');
+    const response = await api.get('auth/me/');
     console.log('📦 RAW DATA FROM SERVER:', response.data);
 
     const payload = response.data?.user || response.data;
