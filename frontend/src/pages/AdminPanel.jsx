@@ -66,15 +66,15 @@ export default function AdminPanel() {
   if (loading) return <div style={{ padding: 20 }}>Загрузка списка пользователей...</div>;
   if (error) return <div style={{ padding: 20, color: 'red' }}>{error}</div>;
 
-const handleLogout = async () => {
+ const handleLogout = async () => {
   try {
-    await api.post('logout/'); // вместо /api/auth/logout/
-    dispatch(logout());
+    await dispatch(logout()).unwrap();
+    enqueueSnackbar('Вы успешно вышли из системы', { variant: 'success' });
   } catch (err) {
     console.error('Ошибка выхода:', err);
-    dispatch(logout()); // всё равно выходим на клиенте
+    enqueueSnackbar('Не удалось выйти. Попробуйте обновить страницу.', { variant: 'error' });
   }
-};
+ };
 
 
   const toggleAdminStatus = async (user) => {
