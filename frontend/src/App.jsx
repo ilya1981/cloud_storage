@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import PrivateRoute from '@/components/PrivateRoute';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
-import Dashboard from '@/pages/Dashboard';
+import DashBoard from '@/pages/Dashboard';
 import LinksList from '@/pages/LinksList';
 import AdminUsers from '@/pages/AdminUsers';
 import AdminPanel from '@/pages/AdminPanel';
