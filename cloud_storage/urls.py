@@ -29,6 +29,8 @@ urlpatterns = [
 
     # Файлы — по пути /api/files/* (через DefaultRouter)
     path("api/", include("files.urls")),
+     # Admin API 
+    path('api/admin/', include('accounts.admin_urls')),
 
     # React-приложение
     path("", serve_react_app),
