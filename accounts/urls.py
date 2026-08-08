@@ -16,9 +16,4 @@ urlpatterns = [
     path("register/", RegisterView.as_view(), name="register"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("csrf/", get_csrf),
-    # Админские эндпоинты
-    path("admin/users/", AdminUsersListView.as_view(), name="admin-users-list"),
-    path(
-        "admin/users/<int:pk>/", AdminUserDetailView.as_view(), name="admin-user-detail"
-    ),
 ]
