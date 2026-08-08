@@ -8,10 +8,4 @@ router.register(r"file-links", FileLinkViewSet, basename="file-link")
 
 urlpatterns = [
     path("", include(router.urls)),
-    # Публичные ссылки — отдельный путь, не через роутер
-    path(
-        "public/<uuid:token>/download/",
-        PublicFileDownloadView.as_view(),
-        name="public-download",
-    ),
 ]
