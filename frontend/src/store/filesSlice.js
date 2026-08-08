@@ -82,7 +82,6 @@ export const fetchFiles = createAsyncThunk(
         }
     }
 );
-
 const filesSlice = createSlice({
     name: 'files',
     initialState: {
@@ -136,7 +135,7 @@ const filesSlice = createSlice({
             state.loading = true;
             state.error = null;
         })
-            .addCase(fetchFiles.fulfilled, (state, action) => {
+         .addCase(fetchFiles.fulfilled, (state, action) => {
             state.loading = false;
             state.list = action.payload || [];
         })
@@ -181,3 +180,4 @@ const filesSlice = createSlice({
 });
 
 export default filesSlice.reducer;
+
