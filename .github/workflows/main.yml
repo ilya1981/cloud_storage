@@ -8,7 +8,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
@@ -19,6 +25,8 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ilya@89.108.71.115 "
             cd ~/cloud_storage &&
+            git config --global user.name 'ilya' &&
+            git config --global user.email 'ilya@example.com' &&
             git pull origin main &&
             source venv/bin/activate &&
             pip install -r requirements.txt &&
@@ -28,3 +36,4 @@ jobs:
             npm run build &&
             sudo systemctl restart gunicorn
           "
+
