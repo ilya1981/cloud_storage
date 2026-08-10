@@ -252,4 +252,18 @@ API будет доступно по адресу: http://localhost:8000/api/
 
 Убедитесь, что файл .env лежит в /home/user/cloud_storage/.env и имеет корректные значения.
 
+### Настройка CI/CD (GitHub Actions)
 
+Для автоматического деплоя при пуше в ветку main убедитесь, что в GitHub Secrets добавлены
+- SSH_PRIVATE_KEY — приватный SSH-ключ пользователя user (PEM-формат).
+- SERVER_IP — IP-адрес вашего VPS (например, 89.108.71.115).
+  Также на сервере должно быть правило sudo без пароля для перезапуска сервиса:
+
+      echo "ilya ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart cloud_storage" | sudo tee -a /etc/sudoers
+
+Проверка:
+
+    sudo systemctl restart cloud_storage  # пароль запрашиваться не должен
+
+
+    
