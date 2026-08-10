@@ -200,6 +200,14 @@ API будет доступно по адресу: http://localhost:8000/api/
         [Install]
         WantedBy=multi-user.target
 
+#### Активируйте сервис:
+
+        sudo systemctl daemon-reload
+        sudo systemctl enable cloud_storage
+        sudo systemctl start cloud_storage
+        sudo systemctl status cloud_storage --no-pager
+
+
 
 
 
