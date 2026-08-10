@@ -90,6 +90,7 @@ cloud_storage/                 # Корень репозитория
 bash
 #### Клонирование
 git clone https://github.com/ilya1981/cloud_storage
+
 cd cloud_storage
 
 #### Виртуальное окружение
