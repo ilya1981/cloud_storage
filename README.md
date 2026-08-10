@@ -137,5 +137,8 @@ API будет доступно по адресу: http://localhost:8000/api/
         usermod -aG sudo user
         su - user
 
+#### 3. Настройка PostgreSQL
+
+        sudo -u postgres psql
 
 
