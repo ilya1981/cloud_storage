@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # --- Фронтенд (Vite 8.1.2) ---
+      # --- Сборка фронтенда (Vite 8.1.2) ---
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -26,6 +26,7 @@ jobs:
           npm ci
           npm run build
 
+      # --- Деплой фронтенда на сервер (rsync) ---
       - name: Deploy frontend via rsync
         run: |
           mkdir -p ~/.ssh
@@ -37,7 +38,7 @@ jobs:
           echo "StrictHostKeyChecking no" > ~/.ssh/config
           echo "UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          # --omit-dir-times убирает ошибки "Operation not permitted"
+          # --omit-dir-times нужен, чтобы не было ошибок прав при копировании папок
           rsync -avz --omit-dir-times -e "ssh -i ~/.ssh/id_ed25519_gha" \
             ./frontend/dist/ \
             ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist
@@ -57,7 +58,7 @@ jobs:
           ssh -i ~/.ssh/id_ed25519_gha ilya@${{ secrets.SERVER_IP }} \
             "cd /home/ilya/cloud_storage && /home/ilya/cloud_storage/env/bin/python manage.py migrate --noinput"
 
-      # --- Рестарт бэкенда (через systemd) ---
+      # --- Рестарт бэкенда (systemd) ---
       - name: Restart backend service
         run: |
           mkdir -p ~/.ssh
@@ -72,8 +73,7 @@ jobs:
           ssh -i ~/.ssh/id_ed25519_gha ilya@${{ secrets.SERVER_IP }} \
             "sudo systemctl restart cloud_storage"
 
-
-
+      # --- Health check API (проверка, что бэкенд жив) ---
       - name: Health check API
         run: |
           mkdir -p ~/.ssh
@@ -85,9 +85,8 @@ jobs:
           echo "StrictHostKeyChecking no" > ~/.ssh/config
           echo "UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          # Проверяем, что API жив
+          # Проверяем, что API отвечает (даже если это 403 — это OK, главное не connection refused)
+          # Если нужен строго 2xx — убери || true и оставь только curl -f
           ssh -i ~/.ssh/id_ed25519_gha ilya@${{ secrets.SERVER_IP }} \
-            "curl -f -v -o /dev/null -w '%{http_code}' http://127.0.0.1:8001/api/" || exit 1
-
-        
+            "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8001/api/" | grep -E "^200|^403" || exit 1
 
