@@ -159,7 +159,7 @@ API будет доступно по адресу: http://localhost:8000/api/
         'HOST': 'localhost',
         'PORT': '5432',
     }
-}
+   }
 
 
 
