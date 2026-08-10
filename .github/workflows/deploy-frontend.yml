@@ -1,4 +1,4 @@
-name: Deploy Frontend to Server
+name: Deploy Full Stack to Server
 
 on:
   push:
@@ -12,6 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # --- Фронтенд (Vite 8.1.2) ---
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -25,7 +26,7 @@ jobs:
           npm ci
           npm run build
 
-      - name: Deploy via rsync
+      - name: Deploy frontend via rsync
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
@@ -36,8 +37,39 @@ jobs:
           echo "StrictHostKeyChecking no" > ~/.ssh/config
           echo "UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          # -t (сохранение времени) убран, --delete убран — это убирает обе ошибки
+          # Без --delete и без сохранения времени — стабильно для Nginx
           rsync -avz --omit-dir-times -e "ssh -i ~/.ssh/id_ed25519_gha" \
             ./frontend/dist/ \
             ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist
+
+      # --- Бэкенд (Django 5.2.1 + Gunicorn) ---
+      - name: Apply Django migrations
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_ed25519_gha
+          chmod 600 ~/.ssh/id_ed25519_gha
+
+          echo "StrictHostKeyChecking no" > ~/.ssh/config
+          echo "UserKnownHostsFile /dev/null" >> ~/.ssh/config
+
+          ssh -i ~/.ssh/id_ed25519_gha ilya@${{ secrets.SERVER_IP }} \
+            "cd /home/ilya/cloud_storage && source venv/bin/activate && python manage.py migrate --noinput"
+
+      - name: Restart Gunicorn
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_ed25519_gha
+          chmod 600 ~/.ssh/id_ed25519_gha
+
+          echo "StrictHostKeyChecking no" > ~/.ssh/config
+          echo "UserKnownHostsFile /dev/null" >> ~/.ssh/config
+
+          # Перезапуск через systemctl — самый надёжный способ
+          ssh -i ~/.ssh/id_ed25519_gha ilya@${{ secrets.SERVER_IP }} \
+            "sudo systemctl restart gunicorn-cloud_storage"
+
 
