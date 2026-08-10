@@ -239,6 +239,17 @@ API будет доступно по адресу: http://localhost:8000/api/
     }
 
 
+Активация:
+
+    sudo ln -s /etc/nginx/sites-available/cloud_storage /etc/nginx/sites-enabled/
+    sudo nginx -t
+    sudo systemctl restart nginx
+
+#### 8. Настройка прав и переменных окружения
+
+    chown -R user:user /home/user/cloud_storage
+    chmod -R 755 /home/user/cloud_storage
+
 
 
 
