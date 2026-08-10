@@ -25,21 +25,19 @@ jobs:
           npm ci
           npm run build
 
-      - name: Deploy via rsync (with base64 SSH key)
+      - name: Deploy via rsync
         run: |
-          # Создаём директорию для SSH и ставим строгие права
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # Декодируем приватный ключ из base64 и пишем в файл
           echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_ed25519_gha
           chmod 600 ~/.ssh/id_ed25519_gha
 
-          # Отключаем проверку хоста (чтобы не было интерактивного запроса)
           echo "StrictHostKeyChecking no" > ~/.ssh/config
           echo "UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          # Деплоим собранный фронтенд через rsync
-          rsync -avz --delete -e "ssh -i ~/.ssh/id_ed25519_gha" \
+          # -t (сохранение времени) убран, --delete убран — это убирает обе ошибки
+          rsync -avz --omit-dir-times -e "ssh -i ~/.ssh/id_ed25519_gha" \
             ./frontend/dist/ \
             ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist
+
