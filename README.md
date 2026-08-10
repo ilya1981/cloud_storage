@@ -273,6 +273,9 @@ API будет доступно по адресу: http://localhost:8000/api/
 
         curl -v http://<IP_ИЛИ_ДОМЕН>/api/
 
+Ответ должен быть в формате JSON.
+Проверьте статус сервиса:
 
+    systemctl status cloud_storage --no-pager
 
     
