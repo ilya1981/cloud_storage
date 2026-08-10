@@ -250,7 +250,6 @@ API будет доступно по адресу: http://localhost:8000/api/
     chown -R user:user /home/user/cloud_storage
     chmod -R 755 /home/user/cloud_storage
 
-
-
+Убедитесь, что файл .env лежит в /home/user/cloud_storage/.env и имеет корректные значения.
 
 
