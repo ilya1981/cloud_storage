@@ -280,4 +280,5 @@ API будет доступно по адресу: http://localhost:8000/api/
 
       systemctl status cloud_storage --no-pager
 
-    
+
+- Зайдите в админку Django: /admin/ (логин/пароль от createsuperuser).
