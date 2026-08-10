@@ -1,3 +1,4 @@
+[![Deploy Frontend to Server](https://github.com/ilya1981/cloud_storage/actions/workflows/deploy-frontend.yml/badge.svg)](https://github.com/ilya1981/cloud_storage/actions/workflows/deploy-frontend.yml)
 ### Облачное хранилище файлов (дипломный проект)
 
 Инструкция по локальной установке и запуску проекта на Windows в среде MINGW64: Django 5.2.1 + DRF + PostgreSQL + Vite + React + Material‑UI.
