@@ -180,3 +180,8 @@ API будет доступно по адресу: http://localhost:8000/api/
 
        env/bin/gunicorn --bind 127.0.0.1:8001 cloud_storage.wsgi:application
 
+#### 6. Настройка systemd-сервиса для Gunicorn
+
+        sudo nano /etc/systemd/system/cloud_storage.service
+
+
