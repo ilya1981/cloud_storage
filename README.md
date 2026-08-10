@@ -171,3 +171,9 @@ API будет доступно по адресу: http://localhost:8000/api/
         pip install -r requirements.txt
 
 
+#### 5. Миграции и первый запуск
+
+        python manage.py migrate
+        python manage.py createsuperuser
+
+
