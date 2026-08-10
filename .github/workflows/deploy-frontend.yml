@@ -24,11 +24,19 @@ jobs:
           npm ci
           npm run build
 
-      - name: Deploy via rsync
-        uses: scottbrenner/rsync-deploy-github-action@v1
-        with:
-          args: '-avz --delete'
-          source: './frontend/dist/'
-          destination: 'ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist'
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Deploy via SSH + rsync
+        run: |
+          # Создаём SSH config, чтобы не было предупреждений о host key verification
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519_gha
+          chmod 600 ~/.ssh/id_ed25519_gha
+
+          # Отключаем проверку хоста (для CI это нормально)
+          echo "Host ${{ secrets.SERVER_IP }}" >> ~/.ssh/config
+          echo "    StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "    UserKnownHostsFile /dev/null" >> ~/.ssh/config
+
+          # Копируем dist на сервер
+          rsync -avz --delete ./frontend/dist/ ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist
+
