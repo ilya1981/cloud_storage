@@ -73,6 +73,7 @@ jobs:
             "sudo systemctl restart cloud_storage"
 
 
+
       - name: Health check API
         run: |
           mkdir -p ~/.ssh
@@ -84,9 +85,9 @@ jobs:
           echo "StrictHostKeyChecking no" > ~/.ssh/config
           echo "UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          # Проверяем, что API жив и отдаёт JSON (даже если это ошибка авторизации)
-          ssh -i ~/.ssh/id_25519_gha ilya@${{ secrets.SERVER_IP }} \
+          # Проверяем, что API жив
+          ssh -i ~/.ssh/id_ed25519_gha ilya@${{ secrets.SERVER_IP }} \
             "curl -f -v -o /dev/null -w '%{http_code}' http://127.0.0.1:8001/api/" || exit 1
-        
+
         
 
