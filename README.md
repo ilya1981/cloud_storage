@@ -184,4 +184,23 @@ API будет доступно по адресу: http://localhost:8000/api/
 
         sudo nano /etc/systemd/system/cloud_storage.service
 
+Вставьте:
+
+        [Unit]
+Description=Gunicorn daemon for cloud_storage (Django 5.2.1)
+After=network.target
+
+[Service]
+User=user
+Group=user
+WorkingDirectory=/home/user/cloud_storage
+ExecStart=/home/user/cloud_storage/env/bin/gunicorn --access-logfile - --workers 3 --bind 127.0.0.1:8001 cloud_storage.wsgi:application
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
 
