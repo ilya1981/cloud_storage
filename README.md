@@ -214,6 +214,31 @@ API будет доступно по адресу: http://localhost:8000/api/
 
         sudo rm /etc/nginx/sites-enabled/default
 
+Создайте конфиг:
+
+        sudo nano /etc/nginx/sites-available/cloud_storage
+
+Вставьте (замените 89.108.71.115 на ваш IP или домен после привязки):
+
+        server {
+    listen 80;
+    server_name 89.108.71.115;
+
+    location / {
+        root /home/user/cloud_storage/frontend/dist;
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:8001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    }
+
+
 
 
 
