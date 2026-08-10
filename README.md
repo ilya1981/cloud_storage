@@ -148,5 +148,18 @@ API будет доступно по адресу: http://localhost:8000/api/
         GRANT ALL PRIVILEGES ON DATABASE cloud_storage TO user;
         \q
 
+В settings.py укажите:
+
+        DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'cloud_storage',
+        'USER': ,
+        'PASSWORD': 'ваш_сложный_пароль',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
 
 
