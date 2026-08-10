@@ -126,8 +126,16 @@ API будет доступно по адресу: http://localhost:8000/api/
 Получите IP-адрес и root-пароль (или SSH-ключ).
 Зайдите на сервер:
 в bash
+    
     ssh root@<IP_ВАШЕГО_VPS>
 
+#### 2. Подготовка системы и создание пользователя
+
+        apt update && apt upgrade -y
+        apt install -y python3-pip python3-venv git nginx postgresql postgresql-contrib build-essential libpq-dev
+        adduser user
+        usermod -aG sudo user
+        su - user
 
 
 
