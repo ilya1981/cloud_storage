@@ -1,15 +1,20 @@
 [![Deploy Frontend to Server](https://github.com/ilya1981/cloud_storage/actions/workflows/deploy-frontend.yml/badge.svg)](https://github.com/ilya1981/cloud_storage/actions/workflows/deploy-frontend.yml)
-### Облачное хранилище файлов (дипломный проект)
+# Облачное хранилище файлов (Cloud Storage)
 
-Инструкция по локальной установке и запуску проекта на Windows в среде MINGW64: Django 5.2.1 + DRF + PostgreSQL + Vite + React + Material‑UI.
+**Дипломный проект:** Fullstack-приложение для загрузки, хранения и управления файлами с разграничением прав пользователей.
 
-Требования к окружению
-ОС: Windows 10/11
-Терминал: MINGW64 (Git Bash)
-Python: 3.12+ (проверь: python --version или python3 --version)
-Node.js: 20+ (проверь: node -v)
-PostgreSQL: 14+ (локальная установка, pgAdmin или консольный клиент)
-Инструменты: pip, npm, ruff, bla
+## Стек технологий
+
+- **Backend:** Python 3.12, Django 5.2.1, Django REST Framework 3.15.0
+- **База данных:** PostgreSQL
+- **WSGI-сервер:** Gunicorn (3 воркера)
+- **Reverse proxy:** Nginx
+- **Frontend:** React + Vite 8.1.2, Material-UI
+- **CI/CD:** GitHub Actions (автоматический деплой при пуше в `main`)
+- **Хостинг:** VPS на Reg.ru (Ubuntu 24.04/26.04 LTS)
+
+> ⚠️ **Важно:** Проект требует VPS (виртуальный сервер). Обычный веб-хостинг (shared hosting) в Рег.ру не подойдёт: там нельзя запустить Gunicorn, управлять systemd-сервисами и использовать PostgreSQL полноценно.
+
 ### Структура проекта:
 ```text
 cloud_storage/                 # Корень репозитория
@@ -73,135 +78,40 @@ cloud_storage/                 # Корень репозитория
             └── formatSize.js
             ```
 
-1. Клонируем репозиторий
-в bash
-git clone <https://github.com/ilya1981/cloud_storage> cloud_storage
+## Локальный запуск (для разработки)
+
+### Требования
+- Python 3.10–3.12
+- Node.js 20+
+- PostgreSQL (локально или в Docker)
+
+### Backend (Django)
+
+```bash
+# Клонирование
+git clone <URL_РЕПОЗИТОРИЯ>
 cd cloud_storage
 
-2. Создаём и активируем виртуальное окружение
+# Виртуальное окружение
+python -m venv env
+source env/bin/activate  # Windows: env\Scripts\activate
 
-в bash
-python -m venv venv
-source venv/bin/activate
-
-3. Устанавливаем зависимости бэкенда
-
-в bash
+# Установка зависимостей
 pip install -r requirements.txt
-### или для расширенного набора (линтеры, тесты)
 
-pip install -r requirements-dev.txt
+# Настройка переменных окружения
+cp .env.example .env
+# Отредактируй .env: укажи DB_NAME, DB_USER, DB_PASSWORD, SECRET_KEY и т.д.
 
-### 4. Настраиваем базу данных
-
-Установаем PostgreSQL и создай базу cloud_storage_db (через pgAdmin или CLI).
-Создаём пользователя с правами на эту БД.
-
-SECRET_KEY=твой_секретный_ключ_django
-DEBUG=True
-DATABASE_URL=postgresql://user:password@localhost:5432/cloud_storage_db
-ALLOWED_HOSTS=127.0.0.1,localhost
-CSRF_COOKIE_SECURE=False
-SESSION_COOKIE_SECURE=False
-
-### 5. Применим миграции Django
-
+# Миграции и суперпользователь
 python manage.py migrate
+python manage.py createsuperuser
 
-### Настройка фронтенда (в MINGW64)
-
-Перейдём в папку фронтенда:
-
-bash
-cd frontend
-Установим зависимости:
-
-bash
-npm install
-Проверим, что в vite.config.js настроен корректный порт (по умолчанию Vite поднимает на 5173).
-
-Убедимся, что в файле src/services/api.js указан правильный baseURL:
-
-js
-const baseURL = 'http://localhost:8000/api/';
-Вернёмся в корень проекта:
-
-bash
-cd ..
-
-### Запуск проекта (два терминала в MINGW64)
-
-Терминал 1 — бэкенд:
-ss
-bash
+# Запуск сервера
 python manage.py runserver 8000
-Сервер будет доступен по http://localhost:8000. API — по http://localhost:8000/api/.
 
-Терминал 2 — фронтенд:
+API будет доступно по адресу: http://localhost:8000/api/
 
-Откроем новый терминал MINGW64, перейдём в папку frontend и запустим:
-
-bash
-cd frontend
-npm run dev
-Фронтенд будет доступен по http://localhost:5173.
-
-### Проверка CORS и CSRF (важно для MINGW64 / Windows)
-
-В cloud_storage/settings.py должны быть:
-
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    # ... остальные middleware, включая CsrfViewMiddleware
-]
-
-CORS_ALLOW_CREDENTIALS = True
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173"
-]
-
-CSRF‑токен читается из куки и автоматически добавляется в заголовок X-CSRFToken (логика в frontend/src/utils/csrf.js и api.js). Не отключаем CSRF — это требование безопасности.
+### Frontend (React + Vite)
 
 
-### Развёртывание на reg.ru 
-
-### Подготовка артефактов
-
-1. Сборка фронтенда:
-
-npm ci
-npm run build
-
-2. Сбор статических файлов Django: 
-
-python manage.py collectstatic --noinput
-
-
-3. Миграции:
-   
-python manage.py migrate --noinput
-
-4. Создание суперпользователя (если нужно):
-   
-python manage.py createsuperuser --noinput  # с передачей аргументов через env
-
-Требования к деплою на reg.ru
-Использовать WSGI/uWSGI или Gunicorn + Nginx.
-Папка staticfiles/ должна быть доступна по /static/.
-Папка media/ — по /media/.
-Переменные окружения — через панель хостинга или .env.
-База данных — PostgreSQL (на хостинге или внешняя).
-
-
-### Как повторно развернуть приложение без участия разработчика
-Инструкция рассчитана на опытного ИТ‑специалиста:
-
-Клонировать репозиторий.
-Установить Python, Node.js, PostgreSQL.
-Настроить .env с реальными значениями.
-Выполнить миграции и сборку фронтенда.
-Настроить веб‑сервер (Nginx + Gunicorn/uWSGI).
-Запустить приложение.
-Все зависимости и шаги описаны выше. Никаких скрытых инструментов или недокументированных зависимостей нет.
