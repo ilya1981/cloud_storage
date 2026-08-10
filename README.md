@@ -80,48 +80,48 @@ cloud_storage/                 # Корень репозитория
 
 ## Локальный запуск (для разработки)
 
-# Требования
+#### Требования
 - Python 3.10–3.12
 - Node.js 20+
 - PostgreSQL (локально или в Docker)
 
-# Backend (Django)
+#### Backend (Django)
 
 bash
-# Клонирование
+#### Клонирование
 git clone <URL_РЕПОЗИТОРИЯ>
 cd cloud_storage
 
-# Виртуальное окружение
+#### Виртуальное окружение
 python -m venv env
 source env/bin/activate  # Windows: env\Scripts\activate
 
-# Установка зависимостей
+#### Установка зависимостей
 pip install -r requirements.txt
 
-# Настройка переменных окружения
+#### Настройка переменных окружения
 cp .env.example .env
-# Отредактируй .env: укажи DB_NAME, DB_USER, DB_PASSWORD, SECRET_KEY и т.д.
+#### Отредактируй .env: укажи DB_NAME, DB_USER, DB_PASSWORD, SECRET_KEY и т.д.
 
-# Миграции и суперпользователь
+#### Миграции и суперпользователь
 python manage.py migrate
 python manage.py createsuperuser
 
-# Запуск сервера
+#### Запуск сервера
 python manage.py runserver 8000
 
 API будет доступно по адресу: http://localhost:8000/api/
 
-# Frontend (React + Vite)
+#### Frontend (React + Vite)
     В отдельной папке (или в подпапке frontend):
    - cd frontend
    -npm install
    -npm run dev
     Фронтенд будет доступен по адресу: http://localhost:5173/
 
-### Развёртывание на VPS (Reg.ru)
+## Развёртывание на VPS (Reg.ru)
    
-  # 1. Заказ и вход
+  #### 1. Заказ и вход
       В панели Reg.ru закажите VPS (Linux, Ubuntu 24.04 или 26.04, минимум 2 ГБ RAM).
       Получите IP-адрес и root-пароль (или SSH-ключ).
       Зайдите на сервер:
