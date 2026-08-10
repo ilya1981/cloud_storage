@@ -176,4 +176,7 @@ API будет доступно по адресу: http://localhost:8000/api/
         python manage.py migrate
         python manage.py createsuperuser
 
+Проверьте, что приложение запускается без ошибок:
+
+       env/bin/gunicorn --bind 127.0.0.1:8001 cloud_storage.wsgi:application
 
