@@ -1,9 +1,8 @@
-name: Deploy to VPS
+name: Deploy Frontend to Server
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -13,31 +12,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node (для сборки фронтенда)
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: "20"
+          cache: "npm"
 
-      - name: Setup SSH for server access
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy
+      - name: Install and build frontend
+        working-directory: ./frontend
         run: |
-          ssh -o StrictHostKeyChecking=no ilya@89.108.71.115 "
-            cd ~/cloud_storage &&
-            git config --global user.name 'ilya' &&
-            git config --global user.email 'ilya@example.com' &&
-            git fetch origin &&
-            git reset --hard origin/main &&
-            source env/bin/activate &&
-            pip install -r requirements.txt &&
-            python manage.py migrate &&
-            python manage.py collectstatic --noinput &&
-            npm ci &&
-            npm run build &&
-            sudo systemctl restart gunicorn
-          "
+          npm ci
+          npm run build
+
+      - name: Deploy via rsync
+        uses: scottbrenner/rsync-deploy-github-action@v1
+        with:
+          args: '-avz --delete'
+          source: './frontend/dist/'
+          destination: 'ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist'
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    
 
 
