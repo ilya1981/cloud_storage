@@ -259,7 +259,7 @@ API будет доступно по адресу: http://localhost:8000/api/
 - SERVER_IP — IP-адрес вашего VPS (например, 89.108.71.115).
   Также на сервере должно быть правило sudo без пароля для перезапуска сервиса:
 
-      echo "ilya ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart cloud_storage" | sudo tee -a /etc/sudoers
+      echo "user ALL=(ALL) NOPASSWD: /user/bin/systemctl restart cloud_storage" | sudo tee -a /etc/sudoers
 
 Проверка:
 
