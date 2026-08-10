@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-key")
 DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['89.108.71.115','localhost', '127.0.0.1']
 
 
 # Application definition
@@ -165,9 +165,9 @@ LOGGING = {
 # Разрешаем фронтенд (React на localhost:3000)
 CORS_ALLOW_CREDENTIALS = True  # обязательно для работы сессий и cookie
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173", "http://89.108.71.115"]
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173", "http://89.108.71.115"]
 
 
 # Если в проде будет реальный домен — добавь его сюда
@@ -179,3 +179,4 @@ CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SAMESITE = "Lax"  # или "None" — см. пункт 4
 CSRF_COOKIE_SAMESITE = "Lax"  # или "None"
 SESSION_COOKIE_HTTPONLY = True
+STATIC_ROOT = BASE_DIR / 'staticfiles'
