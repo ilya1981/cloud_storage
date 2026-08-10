@@ -2,7 +2,7 @@ name: Deploy Frontend to Server
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   deploy:
@@ -25,18 +25,21 @@ jobs:
           npm ci
           npm run build
 
-      - name: Deploy via rsync
+      - name: Deploy via rsync (with base64 SSH key)
         run: |
+          # Создаём директорию для SSH и ставим строгие права
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # Пишем приватный ключ в файл
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519_gha
+          # Декодируем приватный ключ из base64 и пишем в файл
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_ed25519_gha
           chmod 600 ~/.ssh/id_ed25519_gha
 
-          # Отключаем проверку хоста
+          # Отключаем проверку хоста (чтобы не было интерактивного запроса)
           echo "StrictHostKeyChecking no" > ~/.ssh/config
           echo "UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          # Деплой с прямым указанием ключа
-          rsync -avz --delete -e "ssh -i ~/.ssh/id_ed25519_gha" ./frontend/dist/ ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist
+          # Деплоим собранный фронтенд через rsync
+          rsync -avz --delete -e "ssh -i ~/.ssh/id_ed25519_gha" \
+            ./frontend/dist/ \
+            ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist
