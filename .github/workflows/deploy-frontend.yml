@@ -25,16 +25,34 @@ jobs:
           npm ci
           npm run build
 
+      - name: Validate secrets
+        run: |
+          if [ -z "$SERVER_IP" ]; then
+            echo "ERROR: SERVER_IP secret is missing!"
+            exit 1
+          fi
+          if [ -z "$SSH_PRIVATE_KEY" ]; then
+            echo "ERROR: SSH_PRIVATE_KEY secret is missing!"
+            exit 1
+          fi
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Deploy via SSH + rsync
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519_gha
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519_gha
           chmod 600 ~/.ssh/id_ed25519_gha
 
-          echo "Host ${{ secrets.SERVER_IP }}" >> ~/.ssh/config
-          echo "    StrictHostKeyChecking no" >> ~/.ssh/config
-          echo "    UserKnownHostsFile /dev/null" >> ~/.ssh/config
+          # Создаём корректный config
+          cat > ~/.ssh/config <<EOF
+          Host ${{ secrets.SERVER_IP }}
+          StrictHostKeyChecking no
+          UserKnownHostsFile /dev/null
+          IdentityFile ~/.ssh/id_ed25519_gha
+          EOF
 
           rsync -avz --delete ./frontend/dist/ ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist
 
