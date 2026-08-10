@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
+          cache-dependency-path: "./frontend/package-lock.json"
 
       - name: Install and build frontend
         working-directory: ./frontend
@@ -26,17 +27,14 @@ jobs:
 
       - name: Deploy via SSH + rsync
         run: |
-          # Создаём SSH config, чтобы не было предупреждений о host key verification
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519_gha
           chmod 600 ~/.ssh/id_ed25519_gha
 
-          # Отключаем проверку хоста (для CI это нормально)
           echo "Host ${{ secrets.SERVER_IP }}" >> ~/.ssh/config
           echo "    StrictHostKeyChecking no" >> ~/.ssh/config
           echo "    UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          # Копируем dist на сервер
           rsync -avz --delete ./frontend/dist/ ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist
 
