@@ -208,7 +208,8 @@ API будет доступно по адресу: http://localhost:8000/api/
         sudo systemctl status cloud_storage --no-pager
 Должно быть active (running).
 
-### 7. Настройка Nginx
+#### 7. Настройка Nginx
+
 Удалите дефолтный конфиг:
 
         sudo rm /etc/nginx/sites-enabled/default
