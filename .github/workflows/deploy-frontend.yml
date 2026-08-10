@@ -30,14 +30,13 @@ jobs:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
+          # Пишем приватный ключ в файл
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519_gha
           chmod 600 ~/.ssh/id_ed25519_gha
 
-          cat > ~/.ssh/config <<EOF
-          Host ${{ secrets.SERVER_IP }}
-          StrictHostKeyChecking no
-          UserKnownHostsFile /dev/null
-          IdentityFile ~/.ssh/id_ed25519_gha
-          EOF
+          # Отключаем проверку хоста
+          echo "StrictHostKeyChecking no" > ~/.ssh/config
+          echo "UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          rsync -avz --delete ./frontend/dist/ ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist
+          # Деплой с прямым указанием ключа
+          rsync -avz --delete -e "ssh -i ~/.ssh/id_ed25519_gha" ./frontend/dist/ ilya@${{ secrets.SERVER_IP }}:/home/ilya/cloud_storage/frontend/dist
