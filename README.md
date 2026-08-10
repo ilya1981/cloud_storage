@@ -206,7 +206,7 @@ API будет доступно по адресу: http://localhost:8000/api/
         sudo systemctl enable cloud_storage
         sudo systemctl start cloud_storage
         sudo systemctl status cloud_storage --no-pager
-
+Должно быть active (running).
 
 
 
