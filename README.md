@@ -87,7 +87,7 @@ cloud_storage/                 # Корень репозитория
 
 ### Backend (Django)
 
-```bash
+bash
 # Клонирование
 git clone <URL_РЕПОЗИТОРИЯ>
 cd cloud_storage
@@ -112,11 +112,19 @@ python manage.py runserver 8000
 
 API будет доступно по адресу: http://localhost:8000/api/
 
-## Frontend (React + Vite)
+# Frontend (React + Vite)
     В отдельной папке (или в подпапке frontend):
    - cd frontend
    -npm install
    -npm run dev
+    Фронтенд будет доступен по адресу: http://localhost:5173/
+
+### Развёртывание на VPS (Reg.ru)
+   
+  # 1. Заказ и вход
+      В панели Reg.ru закажите VPS (Linux, Ubuntu 24.04 или 26.04, минимум 2 ГБ RAM).
+      Получите IP-адрес и root-пароль (или SSH-ключ).
+      Зайдите на сервер:
 
 
 
