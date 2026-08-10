@@ -80,12 +80,12 @@ cloud_storage/                 # Корень репозитория
 
 ## Локальный запуск (для разработки)
 
-### Требования
+# Требования
 - Python 3.10–3.12
 - Node.js 20+
 - PostgreSQL (локально или в Docker)
 
-### Backend (Django)
+# Backend (Django)
 
 bash
 # Клонирование
