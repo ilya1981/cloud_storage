@@ -164,7 +164,7 @@ API будет доступно по адресу: http://localhost:8000/api/
 #### 4. Клонирование проекта и установка зависимостей
 
         cd ~
-        git clone <URL_РЕПОЗИТОРИЯ> cloud_storage
+        git clone https://github.com/ilya1981/cloud_storage
         cd cloud_storage
         python3 -m venv env
         source env/bin/activate
