@@ -277,6 +277,7 @@ API будет доступно по адресу: http://localhost:8000/api/
 
 - Проверьте статус сервиса:
 
-    systemctl status cloud_storage --no-pager
+
+      systemctl status cloud_storage --no-pager
 
     
