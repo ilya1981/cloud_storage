@@ -113,5 +113,10 @@ python manage.py runserver 8000
 API будет доступно по адресу: http://localhost:8000/api/
 
 ### Frontend (React + Vite)
+    В отдельной папке (или в подпапке frontend):
+    cd frontend
+    npm install
+    npm run dev
+
 
 
