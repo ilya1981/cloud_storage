@@ -144,7 +144,7 @@ API будет доступно по адресу: http://localhost:8000/api/
 
 Внутри консоли PostgreSQL:
 
-        CREATE USER ilya WITH PASSWORD 'ваш_сложный_пароль';
+        CREATE USER user WITH PASSWORD 'ваш_сложный_пароль';
         CREATE DATABASE cloud_storage OWNER user;
         GRANT ALL PRIVILEGES ON DATABASE cloud_storage TO user;
         \q
